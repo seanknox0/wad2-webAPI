@@ -11,7 +11,6 @@ const users = [
   },
 ];
 
-// deletes all user documents in collection and inserts test data
 export async function loadUsers() {
   console.log('load user Data');
     try {
