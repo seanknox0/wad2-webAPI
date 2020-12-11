@@ -4,7 +4,7 @@ import moviesRouter from './api/movies';
 import bodyParser from 'body-parser';
 import usersRouter from './api/users';
 import session from 'express-session';
-import authenticate from './authenticate';
+import passport from './authenticate';
 import {loadUsers} from './seedData'
 import './db';
 
@@ -40,7 +40,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use('/api/movies', authenticate, moviesRouter);
+app.use(passport.initialize());
+app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
 
 //Users router
 app.use('/api/users', usersRouter);
