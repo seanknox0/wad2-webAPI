@@ -5,13 +5,14 @@ import bodyParser from 'body-parser';
 import usersRouter from './api/users';
 import session from 'express-session';
 import passport from './authenticate';
-import {loadUsers} from './seedData'
+import {loadUsers, loadMovies} from './seedData'
 import './db';
 
 dotenv.config();
 
 if (process.env.SEED_DB) {
   loadUsers();
+  loadMovies();
 }
 
 const errHandler = (err, req, res, next) => {
