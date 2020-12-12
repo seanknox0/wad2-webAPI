@@ -12,10 +12,17 @@ router.get('/', (req, res, next) => {
 
 // Register OR authenticate a user
 router.post('/', async (req, res, next) => {
+  var regularExpression = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
   if (!req.body.username || !req.body.password) {
     res.status(401).json({
       success: false,
       msg: 'Please pass username and password.',
+    });
+  }
+  if (!regularExpression.test(req.body.password)) { 
+    res.status(401).json({
+      success: false,
+      msg: 'Password must contain at least 5 characters and contain at least one number and letter',
     });
   }
   if (req.query.action === 'register') {
@@ -41,6 +48,7 @@ router.post('/', async (req, res, next) => {
             code: 401,
             msg: 'Authentication failed. Wrong password.'
           });
+        
         }
       });
     }
@@ -63,9 +71,17 @@ router.post('/:userName/favourites', async (req, res, next) => {
   const userName = req.params.userName;
   const movie = await movieModel.findByMovieDBId(newFavourite).catch(next);
   const user = await User.findByUserName(userName).catch(next);
-  await user.favourites.push(movie._id);
-  await user.save(); 
-  res.status(201).json(user); 
+  if (isMatch && !err) {
+    await user.favourites.push(movie._id);
+    await user.save(); 
+    res.status(201).json(user); 
+  }
+  else {
+    res.status(401).json({
+      code: 401,
+      msg: 'Failed to add favourite.'
+    });
+  }
 });
 
 router.get('/:userName/favourites', (req, res, next) => {
