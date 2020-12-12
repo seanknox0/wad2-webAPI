@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import moviesRouter from './api/movies';
 import bodyParser from 'body-parser';
+import genreRouter from './api/genres'
 import usersRouter from './api/users';
 import session from 'express-session';
 import passport from './authenticate';
@@ -42,6 +43,8 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
+
+app.use('/api/genres', genreRouter);
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
 
 //Users router

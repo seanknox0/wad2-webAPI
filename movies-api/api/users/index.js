@@ -67,11 +67,11 @@ router.post('/:userName/favourites', async (req, res, next) => {
   res.status(201).json(user); 
 });
 
-  router.get('/:userName/favourites', (req, res, next) => {
-    const user = req.params.userName;
-    User.find( {username: user}).then(
-        user => res.status(201).send(user.favourites)
-    ).catch(next);
-  });
+router.get('/:userName/favourites', (req, res, next) => {
+  const user = req.params.userName;
+  User.find( {username: user}).then(
+      user => res.status(201).send(user.favourites)
+  ).catch(next);
+});
 
 export default router;
