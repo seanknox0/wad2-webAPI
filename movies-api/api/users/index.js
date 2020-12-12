@@ -1,5 +1,6 @@
 import express from 'express';
 import User from './userModel';
+import movieModel from '../movies/movieModel';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router(); // eslint-disable-line
@@ -60,8 +61,8 @@ router.put('/:id',  (req, res, next) => {
 router.post('/:userName/favourites', async (req, res, next) => {
   const newFavourite = req.body.id;
   const userName = req.params.userName;
-  const movie = await movieModel.findByMovieDBId(newFavourite);
-  const user = await User.findByUserName(userName);
+  const movie = await movieModel.findByMovieDBId(newFavourite).catch(next);
+  const user = await User.findByUserName(userName).catch(next);
   await user.favourites.push(movie._id);
   await user.save(); 
   res.status(201).json(user); 
