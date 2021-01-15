@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  getMovies, getMovie, getMovieReviews, getCreditsCast
+  getMovies, getMovie, getMovieReviews, getUpcomingMovies
 } from '../tmdb-api';
 import movieModel from './movieModel';
 
@@ -22,18 +22,9 @@ router.get('/:id/reviews', (req, res, next) => {
   .catch((error) => next(error));
 });
 
-router.get('/:id/cast', (req, res, next) => {
-  const id = parseInt(req.params.id);
-  getCreditsCast(id)
-  .then(cast => res.status(200).send(cast))
-  .catch((error) => next(error));
-});
-
-router.get('/:id/crew', (req, res, next) => {
-  const id = parseInt(req.params.id);
-  getCreditsCrew(id)
-  .then(crew => res.status(200).send(crew))
-  .catch((error) => next(error));
+router.get('/upcoming', (req, res, next) => {
+  getUpcomingMovies().then(upcoming => res.status(200).send(upcoming))
+  .catch(next);
 });
 
 export default router;
