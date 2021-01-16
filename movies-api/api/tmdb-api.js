@@ -72,9 +72,7 @@ export const getMovies = () => {
   export const getPopularPeople = () => {
       return fetch(
         `https://api.themoviedb.org/3/person/popular?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
-      )
-        .then(res => res.json())
-        .then(json => json.results);
+      ).then(res => res.json())
   };
   
   export const getPerson = id => {

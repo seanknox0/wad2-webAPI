@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import moviesRouter from './api/movies';
 import upcomingRouter from './api/upcoming';
+import personRouter from './api/person';
 import bodyParser from 'body-parser';
 import genreRouter from './api/genres'
 import usersRouter from './api/users';
@@ -47,9 +48,8 @@ app.use(passport.initialize());
 
 app.use('/api/genres', genreRouter);
 app.use('/api/upcoming', upcomingRouter);
+app.use('/api/person', personRouter);
 app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
-
-//Users router
 app.use('/api/users', usersRouter);
 
 app.use(errHandler);
