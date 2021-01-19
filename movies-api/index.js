@@ -8,7 +8,7 @@ import genreRouter from './api/genres'
 import usersRouter from './api/users';
 import session from 'express-session';
 import passport from './authenticate';
-import {loadUsers, loadMovies, loadUpcoming} from './seedData'
+import {loadUsers, loadMovies, loadUpcoming, loadPerson} from './seedData'
 import './db';
 
 dotenv.config();
@@ -17,6 +17,7 @@ if (process.env.SEED_DB) {
   loadUsers();
   loadMovies();
   loadUpcoming();
+  loadPerson();
 }
 
 const errHandler = (err, req, res, next) => {
