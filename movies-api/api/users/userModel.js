@@ -6,8 +6,8 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     username: { type: String, unique: true, required: true},
     password: {type: String, required: true },
-    favourites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Movies'}]
-    // other refs : upcoming
+    favourites: [{type: mongoose.Schema.Types.ObjectId, ref: 'Movies'}],
+    watchlater: [{type: mongoose.Schema.Types.ObjectId, ref: 'Upcoming'}]
 });
 
 UserSchema.pre('save', function(next) {
