@@ -97,4 +97,34 @@ router.get('/:userName/favourites', (req, res, next) => {
   .then(user => res.status(201).json(user.favourites)).catch(next);
 });
 
+router.post('/:userName/watchlater', async (req, res, next) => {
+  const newWatchlater = req.body.id;
+  const userName = req.params.userName;
+  const movie = await upcomingModel.findByMovieDBId(newWatchlater).catch(next);
+  const user = await User.findByUserName(userName).catch(next);
+  if (user.watchlater.includes(movie._id)) {
+    res.status(401).json({
+      code: 401, 
+      msg: 'Movie already in watchlater!'
+    })
+  }
+  else if (movie != null && user != null) {
+    await user.watchlater.push(movie._id);
+    await user.save(); 
+    res.status(201).json(user); 
+  }
+  else {
+    res.status(401).json({
+      code: 401,
+      msg: 'Failed to add watchlater.'
+    });
+  }
+});
+
+router.get('/:userName/watchlater', (req, res, next) => {
+  const user = req.params.userName;
+  User.findByUserName(user).populate('watchlater')
+  .then(user => res.status(201).json(user.watchlater)).catch(next);
+});
+
 export default router;
