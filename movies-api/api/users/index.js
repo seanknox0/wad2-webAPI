@@ -1,6 +1,7 @@
 import express from 'express';
 import User from './userModel';
 import movieModel from '../movies/movieModel';
+import upcomingModel from '../upcoming/upcomingModel';
 import jwt from 'jsonwebtoken';
 
 const router = express.Router(); // eslint-disable-line
@@ -65,13 +66,19 @@ router.put('/:id',  (req, res, next) => {
     .then(user => res.json(200, user)).catch(next);
 });
 
-//Add a favourite. No Error Handling Yet. Can add duplicates too!
+
 router.post('/:userName/favourites', async (req, res, next) => {
   const newFavourite = req.body.id;
   const userName = req.params.userName;
   const movie = await movieModel.findByMovieDBId(newFavourite).catch(next);
   const user = await User.findByUserName(userName).catch(next);
-  if (isMatch && !err) {
+  if (user.favourites.includes(movie._id)) {
+    res.status(401).json({
+      code: 401, 
+      msg: 'Movie already in favourites!'
+    })
+  }
+  else if (movie != null && user != null) {
     await user.favourites.push(movie._id);
     await user.save(); 
     res.status(201).json(user); 
@@ -86,9 +93,8 @@ router.post('/:userName/favourites', async (req, res, next) => {
 
 router.get('/:userName/favourites', (req, res, next) => {
   const user = req.params.userName;
-  User.find( {username: user}).then(
-      user => res.status(201).send(user.favourites)
-  ).catch(next);
+  User.findByUserName(user).populate('favourites')
+  .then(user => res.status(201).json(user.favourites)).catch(next);
 });
 
 export default router;
